@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <table>
+      <tr>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+      <tr>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+      <tr>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+    </table>
+    <button onclick="reset()">RESET GAME</button>
+    <div class="player-one">
+      Player 1
+      <input id="playerone-name" type="text" placeholder="Name" />
+      <label for="playerone-color">Choose a color:</label>
+      <select name="playerone-color" id="playerone-color" dropdown>
+        <option value="blue">Blue</option>
+        <option value="red">Red</option>
+        <option value="green">Green</option>
+        <option value="yellow">Yellow</option>
+        <option value="black">Black</option>
+        <option value="brown">Brown</option>
+        <option value="purple">Purple</option>
+        <option value="orange">Orange</option>
+      </select>
+      <input
+        id="playerone-letter"
+        type="text"
+        name="letter"
+        placeholder="Choose a letter"
+      />
+      <button id="playerone-save">SAVE</button>
+    </div>
+    <div class="player-two">
+      Player 2
+      <input id="playertwo-name" type="text" placeholder="Name" />
+      <label for="playertwo-color">Choose a color:</label>
+      <select name="playertwo-color" id="playertwo-color" dropdown>
+        <option value="blue">Blue</option>
+        <option value="red">Red</option>
+        <option value="green">Green</option>
+        <option value="yellow">Yellow</option>
+        <option value="black">Black</option>
+        <option value="brown">Brown</option>
+        <option value="purple">Purple</option>
+        <option value="orange">Orange</option>
+      </select>
+      <input
+        id="playertwo-letter"
+        type="text"
+        name="letter"
+        placeholder="Choose a letter"
+      />
+      <button id="playertwo-save">SAVE</button>
+    </div>
+    <div class="results"></div>
+    <script src="script.js"></script>
+  </body>
+</html>
