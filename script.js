@@ -46,7 +46,6 @@ const game = () => {
             firstPlayer.turn = false;
             secondPlayer.turn = true;
             winCheck();
-            console.log(gameBoard.board);
           }
         }
         const gb = gameBoard.board;
@@ -156,7 +155,7 @@ game().makeMove();
 
 const isMoveLeft = (b) => {
   for (let i = 0; i < b.length; i++) {
-    if (b[i].value === "") {
+    if (b[i] === "") {
       return true;
     } else {
       return false;
@@ -203,26 +202,25 @@ const minimax = (board, depth, isMax) => {
   if (isMoveLeft(board) === false) {
     return 0;
   }
-  if (isMax) {
+  if (isMax === true) {
     let best = -1000;
-    for (let i = 0; i < b.length; i++) {
-      if (b[i] === "") {
-        b[i] = secondPlayer.letter;
+    for (let i = 0; i < board.length; i++) {
+      if (board[i] === "") {
+        board[i] = secondPlayer.letter;
         best = Math.max(best, minimax(board, depth + 1, !secondPlayer.turn));
-        b[i] = "";
+        board[i] = "";
       }
     }
     return best;
-  } else {
+  } else if (isMax === false) {
     let best = 1000;
-    for (let i = 0; i < b.length; i++) {
-      if (b[i] === "") {
-        b[i] = firstPlayer.letter;
+    for (let i = 0; i < board.length; i++) {
+      if (board[i] === "") {
+        board[i] = firstPlayer.letter;
         best = Math.min(best, minimax(board, depth + 1, !secondPlayer.turn));
-        b[i] = "";
+        board[i] = "";
       }
     }
-    console.log(best);
     return best;
   }
 };
