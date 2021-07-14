@@ -1,3 +1,4 @@
+const th = document.querySelectorAll("th");
 const gameBoard = (() => {
   let board = [];
   const emptyBoardArr = (arr) => {
@@ -27,56 +28,49 @@ const gameBoard = (() => {
     emptyBoardArr,
   };
 })();
+const b = gameBoard.board;
 const player = (name, letterEl, color) => {
   let letter = letterEl.toUpperCase();
   const turn = true;
   return { name, letter, color, turn };
 };
+let firstPlayer = player("Player1", "o", "red");
+let secondPlayer = player("Player2", "x", "blue");
 const game = () => {
   secondPlayer.turn = false;
   const makeMove = () => {
     for (let i = 0; i < th.length; i++) {
       th[i].addEventListener("click", () => {
-        if (th[i].textContent === "") {
-          if (firstPlayer.turn === true && secondPlayer.turn === false) {
-            gameBoard.updateBoard();
+        if (firstPlayer.turn === true && secondPlayer.turn === false) {
+          if (th[i].textContent === "") {
             gameBoard.board[i] = firstPlayer.letter;
             th[i].textContent = firstPlayer.letter;
             th[i].style.color = firstPlayer.color;
-            firstPlayer.turn = false;
-            secondPlayer.turn = true;
-            winCheck();
-          }
-        }
-        const gb = gameBoard.board;
-        if (
-          gb[0] !== "" ||
-          gb[1] !== "" ||
-          gb[2] !== "" ||
-          gb[3] !== "" ||
-          gb[4] !== "" ||
-          gb[5] !== "" ||
-          gb[6] !== "" ||
-          gb[7] !== "" ||
-          gb[8] !== ""
-        ) {
-          findBestMove(gameBoard.board);
-          let oneMove = bestMove.index;
-          if (th[oneMove].textContent === "") {
             gameBoard.updateBoard();
-            gb[oneMove] = secondPlayer.letter;
-            th[oneMove].textContent = secondPlayer.letter;
-            th[oneMove].style.color = secondPlayer.color;
-            firstPlayer.turn = true;
-            secondPlayer.turn = false;
             winCheck();
+            if (
+              b[0] === "" &&
+              b[1] === "" &&
+              b[2] === "" &&
+              b[3] === "" &&
+              b[4] === "" &&
+              b[5] === "" &&
+              b[6] === "" &&
+              b[7] === "" &&
+              b[8] === ""
+            ) {
+              return;
+            } else {
+              findBestMove();
+              gameBoard.updateBoard;
+              winCheck();
+            }
           }
         }
       });
     }
   };
   const winCheck = () => {
-    const b = gameBoard.board;
     const fp = firstPlayer.letter;
     const sp = secondPlayer.letter;
     if (
@@ -148,18 +142,21 @@ document.querySelector("#playertwo-save").addEventListener("click", () => {
 });
 const random = () => Math.floor(Math.random() * 9);
 
-let firstPlayer = player("Player1", "o", "red");
-let secondPlayer = player("Player2", "x", "blue");
-const th = document.querySelectorAll("th");
-game().makeMove();
-
 const isMoveLeft = (b) => {
-  for (let i = 0; i < b.length; i++) {
-    if (b[i] === "") {
-      return true;
-    } else {
-      return false;
-    }
+  if (
+    b[0] !== "" &&
+    b[1] !== "" &&
+    b[2] !== "" &&
+    b[3] !== "" &&
+    b[4] !== "" &&
+    b[5] !== "" &&
+    b[6] !== "" &&
+    b[7] !== "" &&
+    b[8] !== ""
+  ) {
+    return false;
+  } else {
+    return true;
   }
 };
 const evaluate = (b) => {
@@ -192,58 +189,60 @@ const evaluate = (b) => {
   }
 };
 const minimax = (board, depth, isMax) => {
-  let score = evaluate(board);
-  if (score === 10) {
-    return score;
+  let bScore = evaluate(board);
+  if (bScore === 10) {
+    return bScore;
   }
-  if (score === -10) {
-    return score;
+  if (bScore === -10) {
+    return bScore;
   }
   if (isMoveLeft(board) === false) {
     return 0;
   }
-  if (isMax === true) {
-    let best = -1000;
+  if (isMax) {
+    let bestScore = -Infinity;
     for (let i = 0; i < board.length; i++) {
       if (board[i] === "") {
         board[i] = secondPlayer.letter;
-        best = Math.max(best, minimax(board, depth + 1, !secondPlayer.turn));
+        let score = minimax(board, depth + 1, false);
         board[i] = "";
+        bestScore = Math.max(score, bestScore);
       }
     }
-    return best;
-  } else if (isMax === false) {
-    let best = 1000;
+    return bestScore;
+  } else {
+    let bestScore = Infinity;
     for (let i = 0; i < board.length; i++) {
       if (board[i] === "") {
         board[i] = firstPlayer.letter;
-        best = Math.min(best, minimax(board, depth + 1, !secondPlayer.turn));
+        let score = minimax(board, depth + 1, true);
         board[i] = "";
+        bestScore = Math.min(score, bestScore);
       }
     }
-    return best;
+    return bestScore;
   }
 };
-const moveFactory = (index) => {
-  return { index };
-};
-let bestMove = moveFactory(-1);
-const findBestMove = (board) => {
-  let bestVal = -1000;
-  for (let i = 0; i < board.length; i++) {
-    if (board[i] === "") {
-      board[i] = secondPlayer.letter;
-      let moveVal = minimax(board, 0, false);
-      console.log(moveVal);
-      board[i] = "";
-      if (moveVal > bestVal) {
-        bestMove.index = i;
-        bestVal = moveVal;
+
+const findBestMove = () => {
+  let bestScore = -Infinity;
+  let move = "";
+  for (let i = 0; i < b.length; i++) {
+    if (b[i] === "") {
+      b[i] = secondPlayer.letter;
+      let score = minimax(b, 0, false);
+      b[i] = "";
+      if (score > bestScore) {
+        bestScore = score;
+        move = i;
       }
     }
   }
-  return bestMove;
+  b[move] = secondPlayer.letter;
+  th[move].textContent = secondPlayer.letter;
+  th[move].style.color = secondPlayer.color;
 };
+game().makeMove();
 /*const cpuMove = () => {
   let oneRandom = random();
   if (th[oneRandom].textContent === "") {
@@ -261,7 +260,6 @@ const findBestMove = (board) => {
 /*const cpuMove = () => {
   findBestMove(gameBoard.board);
   let oneMove = bestMove.index;
-  if (th[oneMove].textContent === "") {
     gameBoard.updateBoard();
     gameBoard.board[oneMove] = secondPlayer.letter;
     th[oneMove].textContent = secondPlayer.letter;
@@ -269,9 +267,6 @@ const findBestMove = (board) => {
     firstPlayer.turn = true;
     secondPlayer.turn = false;
     game().winCheck();
-  } else {
-    cpuMove();
-  }
 };*/
 /*else if (firstPlayer.turn === false && secondPlayer.turn === true) {
   gameBoard.updateBoard();
@@ -282,3 +277,21 @@ const findBestMove = (board) => {
   secondPlayer.turn = false;
   winCheck();
 }*/
+/*const makeMove = () => {
+    for (let i = 0; i < th.length; i++) {
+      th[i].addEventListener("click", () => {
+        if (th[i].textContent === "") {
+          if (firstPlayer.turn === true && secondPlayer.turn === false) {
+            gameBoard.updateBoard();
+            gameBoard.board[i] = firstPlayer.letter;
+            th[i].textContent = firstPlayer.letter;
+            th[i].style.color = firstPlayer.color;
+            firstPlayer.turn = false;
+            secondPlayer.turn = true;
+            winCheck();
+          }
+        }
+        cpuMove();
+      });
+    }
+  };*/
