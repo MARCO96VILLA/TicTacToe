@@ -141,7 +141,6 @@ document.querySelector("#playertwo-save").addEventListener("click", () => {
   secondPlayer.color = document.querySelector("#playertwo-color").value;
 });
 const random = () => Math.floor(Math.random() * 9);
-
 const isMoveLeft = (b) => {
   if (
     b[0] !== "" &&
@@ -188,6 +187,21 @@ const evaluate = (b) => {
     return 0;
   }
 };
+const cpuWin = () => {
+  const sp = secondPlayer.letter;
+  if (
+    (b[0] === sp && b[1] === sp && b[2] === sp) ||
+    (b[3] === sp && b[4] === sp && b[5] === sp) ||
+    (b[6] === sp && b[7] === sp && b[8] === sp) ||
+    (b[0] === sp && b[3] === sp && b[6] === sp) ||
+    (b[1] === sp && b[4] === sp && b[7] === sp) ||
+    (b[2] === sp && b[5] === sp && b[8] === sp) ||
+    (b[0] === sp && b[4] === sp && b[8] === sp) ||
+    (b[2] === sp && b[4] === sp && b[6] === sp)
+  ) {
+    return true;
+  }
+};
 const minimax = (board, depth, isMax) => {
   let bScore = evaluate(board);
   if (bScore === 10) {
@@ -230,11 +244,15 @@ const findBestMove = () => {
   for (let i = 0; i < b.length; i++) {
     if (b[i] === "") {
       b[i] = secondPlayer.letter;
-      let score = minimax(b, 0, false);
-      b[i] = "";
-      if (score > bestScore) {
-        bestScore = score;
+      if (cpuWin() === true) {
         move = i;
+      } else {
+        let score = minimax(b, 0, false);
+        b[i] = "";
+        if (score > bestScore) {
+          bestScore = score;
+          move = i;
+        }
       }
     }
   }
